@@ -135,32 +135,22 @@ FF              FiniteField (
     UInt                i, l, f, n, e;  /* loop variables                  */
     Obj                 root;           /* will be a primitive root mod p  (jdebeule 16/09/18 */
 
-    /* calculate size of field */
-    q = 1;
-    for ( i = 1; i <= d; i++ ) q *= p;
-
     /* search through the finite field table                               */
-    l = 1; n = NUM_SHORT_FINITE_FIELDS;
-    ff = 0;
-    while (l <= n && SizeFF[l] <= q && q <= SizeFF[n]) {
-      /* interpolation search */
-      /* cuts iterations roughly in half compared to binary search at
-       * the expense of additional divisions. */
-      e = (q - SizeFF[l]+1) * (n-l) / (SizeFF[n]-SizeFF[l]+1);
-      ff = l + e;
-      if (SizeFF[ff] == q)
-        break;
-      if (SizeFF[ff] < q)
-        l = ff+1;
-      else
-        n = ff-1;
+    for ( ff = 1; ff <= LEN_PLIST(SuccFF); ff++ ) {
+        if ( CHAR_FF(ff) == p && DEGR_FF(ff) == d ) {
+            /*printf("found one\n");*/
+            return ff;
+        }
     }
-    if (ff < 1 || ff > NUM_SHORT_FINITE_FIELDS)
-      return 0;
-    if (CharFF[ff] != p)
-      return 0;
-    if (SizeFF[ff] != q)
-      return 0;
+    /*printf("construct new one\n");*/
+    /* check whether we can build such a finite field                      */
+    if ( (  2 <= p && 17 <= d) || (  3 <= p && 11 <= d)
+      || (  5 <= p &&  7 <= d) || (  7 <= p &&  6 <= d)
+      || ( 11 <= p &&  5 <= d) || ( 17 <= p &&  4 <= d)
+      || ( 41 <= p &&  3 <= d) || (257 <= p &&  2 <= d) ) {
+        return 0;
+    }
+
 #ifdef HPCGAP
     /* Important correctness concern here:
      *
@@ -184,6 +174,9 @@ FF              FiniteField (
     if (ELM_PLIST(TypeFF0, ff))
       return ff;
 #endif
+
+    q = 1;
+    for ( i = 1; i <= d; i++ ) q *= p;
 
     /* allocate a bag for the successor table and one for a temporary         */
     tmp  = NewBag( T_DATOBJ, sizeof(Obj) + q * sizeof(FFV) );

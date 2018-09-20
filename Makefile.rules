@@ -49,7 +49,7 @@ SOURCES += src/dt.c
 SOURCES += src/dteval.c
 SOURCES += src/error.c
 SOURCES += src/exprs.c
-SOURCES += src/ffdata.c
+#SOURCES += src/ffdata.c
 SOURCES += src/finfield.c
 SOURCES += src/funcs.c
 SOURCES += src/gap.c
@@ -417,9 +417,9 @@ docomp: #gap$(EXEEXT)
 ffgen: etc/ffgen.c
 	$(QUIET_CC)$(CC) -Wall -Wextra $< -o $@
 
-ffdata: ffgen
-	./ffgen -h > $(abs_srcdir)/src/ffdata.h
-	./ffgen -c > $(abs_srcdir)/src/ffdata.c
+#ffdata: ffgen
+#	./ffgen -h > $(abs_srcdir)/src/ffdata.h
+#	./ffgen -c > $(abs_srcdir)/src/ffdata.c
 
 .PHONY: ffdata
 

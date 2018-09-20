@@ -81,8 +81,13 @@
 #ifndef GAP_FINFIELD_H
 #define GAP_FINFIELD_H
 
-#include "ffdata.h"
+/*#include "ffdata.h"*/
 #include "system.h"
+
+enum {
+    NUM_SHORT_FINITE_FIELDS = 1078555, /* jdebeule: 18/09/18 was 6635 */
+    SIZE_LARGEST_INTERNAL_FF = 16777216 /* added 19/09/18 */
+};
 
 /****************************************************************************
 **
@@ -109,7 +114,7 @@ typedef UInt4       FF; /* jdebeule (16/9/18): was UInt2 */
 **  Note that  'CHAR_FF' is a macro,  so do not call  it  with arguments that
 **  have side effects.
 */
-#define CHAR_FF(ff)             (CharFF[ff])
+/*#define CHAR_FF(ff)             (CharFF[ff])*/
 
 
 /****************************************************************************
@@ -121,7 +126,7 @@ typedef UInt4       FF; /* jdebeule (16/9/18): was UInt2 */
 **  Note that 'DEGR_FF' is  a macro, so do   not call it with  arguments that
 **  have side effects.
 */
-#define DEGR_FF(ff)             (DegrFF[ff])
+/*#define DEGR_FF(ff)             (DegrFF[ff])*/
 
 
 /****************************************************************************
@@ -133,7 +138,7 @@ typedef UInt4       FF; /* jdebeule (16/9/18): was UInt2 */
 **  Note that 'SIZE_FF' is a macro, so do not call  it  with  arguments  that
 **  have side effects.
 */
-#define SIZE_FF(ff)             (SizeFF[ff])
+/*#define SIZE_FF(ff)             (SizeFF[ff])*/
 
 
 /****************************************************************************
@@ -409,8 +414,12 @@ extern  FF              CommonFF (
 **  'CharFFE' returns the characteristic of the small finite field  in  which
 **  the element <ffe> lies.
 */
-extern  UInt            CharFFE (
-            Obj                 ffe );
+#define CHAR_FF(ff)             INT_INTOBJ( ELM_PLIST( CharFF, ff ) )
+
+extern  Obj             CharFF;
+
+/*extern  UInt            CharFFE (
+            Obj                 ffe );*/
 
 
 /****************************************************************************
@@ -420,8 +429,13 @@ extern  UInt            CharFFE (
 **  'DegreeFFE' returns the degree of the smallest finite field in which  the
 **  element <ffe> lies.
 */
+#define DEGR_FF(ff)             INT_INTOBJ( ELM_PLIST( DegrFF, ff ) )
+
+extern  Obj             DegrFF;
+/*
+
 extern  UInt            DegreeFFE (
-            Obj                 ffe );
+            Obj                 ffe );*/
 
 
 /****************************************************************************
@@ -435,6 +449,17 @@ extern  UInt            DegreeFFE (
 */
 extern  Obj             TypeFFE (
             Obj                 ffe );
+
+/****************************************************************************
+**
+*F  SIZE_FF(<ff>) . . . . . . . . . . . . . . . .  size of small finite field
+**
+**  'SIZE_FF' returns the size of the small finite field <ff>.
+**
+**  Note that 'SIZE_FF' is a macro, so do not call  it  with  arguments  that
+**  have side effects.
+*/
+#define SIZE_FF(ff)             (*SUCC_FF(ff)+1)
 
 
 /****************************************************************************
